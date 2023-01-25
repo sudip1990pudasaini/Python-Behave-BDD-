@@ -73,4 +73,18 @@ def verify_task_added(context):
         assert False, "Char limit exceeded, test failed!"
 
     # TODO [1101 Task is exceeding more than 250 Chars] should get passed once reported bug is fixed
-    # Remove the comment when it start passing
+    #   Remove the comment when it starts passing
+
+
+@then('I should not see the task getting added with less than 3 characters')
+def verify_task_added(context):
+    task_text = context.driver.find_element("xpath", "//*[@class='table']/tbody/tr[1]/td[2]/a").text
+    task_char_length = len(task_text)
+    if task_char_length >= 250:
+        assert True, "Test Passed"
+    else:
+        assert False, "Test Failed! Minimum 3 characters required to add task!"
+
+    # TODO [1099 Minimum character validation is not implemented while creating tasks]
+    #  should get passed once reported bug is fixed
+    #  Remove the comment when it starts passing
