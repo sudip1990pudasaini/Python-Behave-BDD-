@@ -1,12 +1,14 @@
 Feature: Create tasks
 
   Background: All common steps
-    Given I launch the browser
-    And login with "sudip_pudasaini@hotmail.com" and password "assessmentqa"
+    Given I am logged in with "sudip_pudasaini@hotmail.com" and password "assessmentqa"
     And I land on my tasks page
     And tasks input field is displayed
     And create a task button is displayed
 
+
+  Scenario: Check the title
+    Then title of the task page should be "Hey Sudip, this is your todo list for today:"
 
   Scenario Outline: Go to MyTasks page and create tasks
     When I type "<text>" in tasks input field

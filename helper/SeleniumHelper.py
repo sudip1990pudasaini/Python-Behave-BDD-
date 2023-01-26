@@ -20,6 +20,16 @@ class SeleniumHelper:
             print(f"Exception occurred while checking for element presence: {e}")
         return flag
 
+    def wait_browser_to_load_completely(self, timeout=30):
+        self.driver.implicitly_wait(timeout)
+
+    def click_on_element(self, locator):
+        self.driver.find_element(list(locator.keys())[0], list(locator.values())[0]).click()
+
+    def get_element_text(self, locator):
+        text = self.driver.find_element(list(locator.keys())[0], list(locator.values())[0]).text
+        return text
+
     def insert_text_in_input_field(self, locator, input_text):
         self.driver.find_element(list(locator.keys())[0], list(locator.values())[0]).send_keys(input_text)
 

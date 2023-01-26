@@ -1,71 +1,87 @@
 from behave import *
-from selenium import webdriver
-import time
+from helper.SeleniumHelper import SeleniumHelper
+from locators import login_page_locators
+from locators import my_tasks_page_locators
 
 
-@given('I launch the browser')
-def launch_browser(context):
-    context.driver = webdriver.Chrome(
-        executable_path="/Users/sudippudasaini/Drivers/chromedriver_mac_arm64/chromedriver")
-
-
-@given('login with "{email}" and password "{password}"')
+@given('I am logged in with "{email}" and password "{password}"')
 def login(context, email, password):
-    context.driver.get("https://qa-test.avenuecode.io/tasks")
-    time.sleep(5)
-    login_page_opened = context.driver.find_element("id", "sign_in").is_displayed()
-    assert login_page_opened is True
+    SeleniumHelper(context.driver).insert_text_in_input_field(
+        login_page_locators.email_input_field, email)
 
-    context.driver.find_element("id", "user_email").send_keys(email)
-    context.driver.find_element("id", "user_password").send_keys(password)
-    context.driver.find_element("xpath", "//*[@class='btn btn-primary' "
-                                         "and @name='commit']").click()
+    SeleniumHelper(context.driver).insert_text_in_input_field(
+        login_page_locators.password_input_field, password)
+
+    SeleniumHelper(context.driver).click_on_element(
+        login_page_locators.sign_in_button)
+    SeleniumHelper(context.driver).wait_till_element_present(my_tasks_page_locators.my_task_menu)
+
+
+@then('title of the task page should be "{title}"')
+def verify_title(context, title):
+    tasks_page_title_displayed = SeleniumHelper(context.driver).verify_element_displayed(
+        my_tasks_page_locators.title_message)
+    title_copy = SeleniumHelper(context.driver).get_element_text(
+        my_tasks_page_locators.title_message)
+
+    if tasks_page_title_displayed and title_copy == title:
+        assert True, "Test passed"
+    else:
+        assert False, "Test Failed! Title did not match with the given copy"
+    # TODO [Bug: 1098 Tasks page title copy is incorrect] has to be fixed to pass this test
+    #   Remove this comment when bug is fixed
 
 
 @given('I land on my tasks page')
 def verify_my_tasks_page(context):
-    my_tasks_page_displayed = context.driver.find_element("id", "my_task").is_displayed()
+    my_tasks_page_displayed = SeleniumHelper(context.driver).verify_element_displayed(
+        my_tasks_page_locators.my_task_menu)
     assert my_tasks_page_displayed is True
 
 
 @given('tasks input field is displayed')
 def verify_task_input_displayed(context):
-    time.sleep(5)
-    task_input_displayed = context.driver.find_element("id", "new_task").is_displayed()
+    task_input_displayed = SeleniumHelper(context.driver).verify_element_displayed(
+        my_tasks_page_locators.task_input_field)
     assert task_input_displayed is True
 
 
 @given('create a task button is displayed')
 def verify_add_button_displayed(context):
-    add_button_displayed = context.driver.find_element(
-        "xpath", "//*[@class='input-group-addon glyphicon glyphicon-plus']").is_displayed()
+    add_button_displayed = SeleniumHelper(context.driver).verify_element_displayed(
+        my_tasks_page_locators.add_task_button)
     assert add_button_displayed is True
 
 
 @when('I type "{task_text}" in tasks input field')
 def add_tasks(context, task_text):
-    context.driver.find_element("id", "new_task").send_keys(task_text)
+    SeleniumHelper(context.driver).insert_text_in_input_field(
+        my_tasks_page_locators.task_input_field, task_text)
 
 
 @when('click on the add button')
 def click_add_button(context):
-    context.driver.find_element("xpath", "//*[@class='input-group-addon glyphicon glyphicon-plus']").click()
+    SeleniumHelper(context.driver).click_on_element(
+        my_tasks_page_locators.add_task_button)
 
 
 @then('I should see the task getting added in the list')
 def verify_task_added(context):
-    context.driver.find_element("xpath", "//*[@class='table']/tbody/tr[1]/td[2]/a")
+    row_displayed = SeleniumHelper(context.driver).verify_element_displayed(
+        my_tasks_page_locators.added_task_in_table)
 
 
 @then('I should not see the empty task getting added')
-def verify_task_added(context):
-    task_text = context.driver.find_element("xpath", "//*[@class='table']/tbody/tr[1]/td[2]/a").text
+def verify_task_text(context):
+    task_text = SeleniumHelper(context.driver).get_element_text(
+        my_tasks_page_locators.added_task_in_table)
     assert task_text != "    "
 
 
 @then('task of char length 254 should not get added')
 def verify_task_added(context):
-    task_text = context.driver.find_element("xpath", "//*[@class='table']/tbody/tr[1]/td[2]/a").text
+    task_text = SeleniumHelper(context.driver).get_element_text(
+        my_tasks_page_locators.added_task_in_table)
     task_char_length = len(task_text)
     if task_char_length <= 250:
         assert True, "Test Passed"
@@ -78,7 +94,8 @@ def verify_task_added(context):
 
 @then('I should not see the task getting added with less than 3 characters')
 def verify_task_added(context):
-    task_text = context.driver.find_element("xpath", "//*[@class='table']/tbody/tr[1]/td[2]/a").text
+    task_text = SeleniumHelper(context.driver).get_element_text(
+        my_tasks_page_locators.added_task_in_table)
     task_char_length = len(task_text)
     if task_char_length >= 250:
         assert True, "Test Passed"
