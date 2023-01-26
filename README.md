@@ -3,15 +3,15 @@
  2. Install IDE (PyCharm recommended)
  3. Setup python interpreter (I have used 3.11)
  4. Install Selenium globally, can simply install with PIP command
- 5. Install behave (python frameowrk for BDD) globally, can simply install with PIP command
- 6. Install selenium webDriver. You can use any however I have chromeDriver installed it will run on latest chrome version
+ 5. Install behave (python framework for BDD) globally, can simply install with PIP command
+ 6. Install selenium webDriver. You can use any however I have chromeDriver installed it will run on latest Chrome version
  7. Add selenium and behave packages in project settings
  8. Also add allure-report if you want to see report generated
  
  # How to Run Tests
  1. If you are using windows, I have added run.bat file. Just go to that file and run
- 2. Otherwise open terminal and enter command "*behave*", it runs all suites
- 3. Or if you want to run specific suties/features then run commnad "*behave feature/login.feature*"
+ 2. Otherwise, open terminal and enter command "*behave*", it runs all suites
+ 3. Or if you want to run specific suites/features then run command "*behave feature/login.feature*"
  
  # Generate Reports [Fresh Install]
  Pre-requisite for this:</br>
