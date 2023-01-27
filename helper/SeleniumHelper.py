@@ -26,6 +26,14 @@ class SeleniumHelper:
     def click_on_element(self, locator):
         self.driver.find_element(list(locator.keys())[0], list(locator.values())[0]).click()
 
+    def is_element_enabled(self, locator):
+        element = self.driver.find_element(list(locator.keys())[0], list(locator.values())[0])
+        return element.is_enabled()
+
+    def clear_input_field(self, locator):
+        text = self.driver.find_element(list(locator.keys())[0], list(locator.values())[0]).clear()
+        return text
+
     def get_element_text(self, locator):
         text = self.driver.find_element(list(locator.keys())[0], list(locator.values())[0]).text
         return text
